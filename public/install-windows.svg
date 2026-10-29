@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="310" height="66" viewBox="0 0 310 66" role="img" aria-label="Install for Windows / 윈도우 설치">
+  <rect x="1" y="1" width="308" height="64" rx="14" fill="#1967d2"/>
+  <path d="M31 16v20m-8-8 8 8 8-8M21 42v7h20v-7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="57" y="29" font-family="Arial,Malgun Gothic,sans-serif" font-size="18" font-weight="700" fill="#fff">Install for Windows</text>
+  <text x="58" y="49" font-family="Arial,Malgun Gothic,sans-serif" font-size="13" fill="#e5efff">윈도우 설치 · Sunny Calendar</text>
+</svg>

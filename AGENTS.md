@@ -1,0 +1,19 @@
+# Sunny Calendar clean edition
+- Public Git commits must use Sunny Calendar contributors <sunny-calendar@local.invalid>. Never use the account's personal name or email. Use local Git with this repository identity; GitHub connector commit/file-write tools insert the account identity and must not be used for public commits. Keep recovery branches and old history private. Run scripts/check-release-privacy.py before release packaging. GitHub owner links are platform account information, separate from project content; do not change the user's global profile or other projects without a separate request.
+- User authorized publishing this clean edition to GitHub with a simple coworker install link. Publish only reviewed clean source and fictional samples. Keep the Install button pointing to the stable Sunny-Calendar-Setup.exe release asset. Use per-user installation, bilingual setup and desktop/Start menu shortcuts. Preserve saved data during updates and uninstall. Never publish working calendar records or credentials.
+- This is the clean coworker test/source edition. Keep src/seed.json docs and review empty. Fictional sample data belongs only in demo-samples.json and is initialized once into a new data file for the first-open month. Samples use ABC/XYZ companies, SAMPLE labels and generic references; they remain editable/deletable and must never reappear after deletion. Never copy working calendar entries, imported spreadsheets, screenshots, profiles, databases or backups into source or release packages.
+- Keep all existing calendar features, Korean/English controls, editable task cards, red/black completion and memo/image support.
+- Keep loopback port 4176, clean-test server identity, Sunny.Calendar.CleanTest native identity, and clean browser storage separate from the working app on 4173.
+- Never modify or remove the working app's data folder.
+- Keep calendar data local. Git and distribution packages must exclude local-data, profiles, binaries, runtime and dependencies unless explicitly producing a reviewed runtime package.
+- Desktop buttons open their installed apps only. Users handle POS sign-in and VPN connections.
+- Local filename search starts with only this computer's Work_files folder. Users choose any network share themselves. Use generic computer names in examples.
+- Build with npm run build. Keep the Sites worker, hosting config and preparation script intact.
+
+- Each date has a separated, always-visible, raised red ++ beside the normal +. Single + creates a personal task; ++ creates a locally saved team draft. Draft cards keep their pastel/completion colors and receive a bold inset outline plus ++ marker. Label team drafts as local-only until real coworker sync exists. Persist teamLayers flags per task, preserve them through edits/completion/delete/Undo/export/restore, and do not mark any existing real task as shared automatically.
+
+- Use one Sunny office sharing group. The first ++ click opens setup; enabling the app-wide team draft mode persists across restarts until disabled in Settings. Subsequent ++ clicks do not ask again while enabled. Turning the mode off must preserve tasks and drafts. Status remains explicitly Not connected until real network sync is implemented; do not claim that a draft-mode preference connects coworkers.
+
+- The top magnifying glass reveals and focuses the left sidebar search. Ordinary text filters calendar notes; a two-backslash computer address plus Enter or Open network computer uses the existing Windows Explorer network action. Do not filter calendar notes for a network address, claim reachability from launching Explorer, or change Windows network settings. Keep labels and guidance bilingual.
+
+- Remove the old Google Calendar reminder from the bottom bar. Keep the saved/saving status and save guard.

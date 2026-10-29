@@ -1,0 +1,62 @@
+{
+  "days": [
+    {
+      "day": 14,
+      "tasks": [
+        "SAMPLE · ABC Company<br>Send a sample quotation<br>Demo reference: ABC-DEMO-001",
+        "SAMPLE · XYZ Company<br>Confirm the delivery plan<br>This is fictional practice data."
+      ],
+      "completed": [
+        false,
+        true
+      ]
+    },
+    {
+      "day": 18,
+      "tasks": [
+        "SAMPLE · ABC Company<br>Review a sample purchase order<br>No real order or customer details."
+      ],
+      "completed": [
+        false
+      ]
+    },
+    {
+      "day": 20,
+      "tasks": [
+        "SAMPLE · XYZ Company<br>Check a sample shipment plan",
+        "SAMPLE · ABC Company<br>Call to confirm a sample order",
+        "SAMPLE · Team planning<br>Prepare next week’s task list"
+      ],
+      "completed": [
+        false,
+        true,
+        false
+      ]
+    },
+    {
+      "day": "today",
+      "tasks": [
+        "SAMPLE · XYZ Company<br>Follow up on a demo quotation",
+        "SAMPLE · Try the checkbox<br>Tick this task when finished."
+      ],
+      "completed": [
+        false,
+        false
+      ]
+    }
+  ],
+  "memos": [
+    {
+      "id": "memo:sample-month",
+      "title": "SAMPLE · Monthly notes",
+      "pinned": false,
+      "html": "<h3>Monthly planning example</h3><p>ABC Company: review the demo quotation.</p><p>XYZ Company: confirm a sample delivery date.</p><p>These are fictional examples. Edit or delete this memo.</p>"
+    },
+    {
+      "id": "memo:sample-reference",
+      "title": "SAMPLE · Reference notes",
+      "pinned": true,
+      "html": "<h3>Practice reference table</h3><table><tbody><tr><td>Company</td><td>Sample reference</td></tr><tr><td>ABC Company</td><td>ABC-DEMO-001</td></tr><tr><td>XYZ Company</td><td>XYZ-DEMO-002</td></tr></tbody></table><p>Paste your own screenshots or notes here. No real company data is included.</p>"
+    }
+  ]
+}

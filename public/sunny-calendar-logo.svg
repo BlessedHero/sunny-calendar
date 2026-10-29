@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e9edf3"/></linearGradient>
+    <linearGradient id="red" x2="0" y2="1"><stop stop-color="#f84b4b"/><stop offset="1" stop-color="#b71123"/></linearGradient>
+    <linearGradient id="letter" x1="0" y1="0" x2="0" y2="1"><stop offset=".47" stop-color="#d51e30"/><stop offset=".5" stop-color="#17191e"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="7" stdDeviation="6" flood-color="#142031" flood-opacity=".26"/></filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="22" y="34" width="212" height="194" rx="34" fill="url(#paper)" stroke="#bec7d4" stroke-width="2"/>
+    <path d="M56 34h144a34 34 0 0 1 34 34v19H22V68a34 34 0 0 1 34-34Z" fill="url(#red)"/>
+    <path d="M54 43h148" fill="none" stroke="#ff9999" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+    <rect x="65" y="19" width="15" height="40" rx="7.5" fill="#252932"/>
+    <rect x="176" y="19" width="15" height="40" rx="7.5" fill="#252932"/>
+    <rect x="69" y="22" width="4" height="28" rx="2" fill="#69717d"/>
+    <rect x="180" y="22" width="4" height="28" rx="2" fill="#69717d"/>
+    <g stroke="#dae0e9" stroke-width="1.4" opacity=".65"><path d="M47 118h162M47 153h162M47 188h162M83 104v99M128 104v99M173 104v99"/></g>
+    <text x="128" y="199" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="136" text-anchor="middle" fill="url(#letter)" stroke="#ffffff" stroke-width="2" paint-order="stroke">S</text>
+    <path d="M199 206h25l-25 15Z" fill="#cbd3df"/>
+  </g>
+</svg>

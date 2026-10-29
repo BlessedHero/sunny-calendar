@@ -1,0 +1,49 @@
+name: Build and publish Windows installer
+on:
+  push:
+    branches: [main]
+    paths:
+      - package.json
+      - scripts/build-windows-release.ps1
+      - .github/workflows/publish-windows.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: windows-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: windows-2025
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Build and test clean installer
+        shell: pwsh
+        run: ./scripts/build-windows-release.ps1
+      - name: Publish versioned download
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $taskVersion = (Get-Content -Raw package.json | ConvertFrom-Json).version
+          if ($taskVersion -notmatch '^\d+\.\d+\.\d+$') { throw 'Invalid release version.' }
+          $taskNotes = @'
+          Sunny Calendar / 써니전자 캘린더 — early Windows test release.
+
+          Download Sunny-Calendar-Setup.exe, open it, and click Install. Use the desktop shortcut next time. No GitHub account, Codex or Python installation is needed.
+
+          Sunny-Calendar-Setup.exe를 다운로드하여 연 뒤 설치를 누르세요. 다음부터 바탕 화면 아이콘으로 실행할 수 있습니다.
+
+          Includes only fictional ABC/XYZ SAMPLE tasks and memos. Notes and pictures stay on each computer. Coworker calendar sync is not connected yet. The app is unsigned; company policies may block it. Do not disable security tools.
+
+          Windows 10/11 x64. If Microsoft WebView2 is missing, setup needs internet access to add it. Export a backup before updating. Uninstall leaves saved notes in place.
+          '@
+          Set-Content -LiteralPath release-notes.md -Value $taskNotes -Encoding utf8
+          $taskAssets = @(Get-ChildItem -LiteralPath release -File | Select-Object -ExpandProperty FullName)
+          gh release create "v$taskVersion" @taskAssets --repo "$env:GITHUB_REPOSITORY" --target "$env:GITHUB_SHA" --title "Sunny Calendar $taskVersion" --notes-file release-notes.md --latest
+          if ($LASTEXITCODE -ne 0) { throw 'Release publishing failed.' }
