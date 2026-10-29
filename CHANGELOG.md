@@ -1,5 +1,11 @@
 # Change history
 
+## 0.3.1 — 2026-10-29
+
+- Balanced each day header: ++ at the far left, the date centered, and + at the far right.
+- Added the Update now window with a verified installer download and a local backup. Update closes the saved Windows app, opens the normal installer and reopens the calendar afterward. Cancelled installations reopen the original app.
+- Fixed first upgrades blocked by the older background helper. The installer requires the calendar window to close through its app mutex before clearing its own older runtime.
+
 ## 0.3.0 — 2026-10-29
 
 - Added a glossy blue update button with an automatic release check when the app opens, honest offline status, a local backup before opening the official installer, and English/Korean guidance.

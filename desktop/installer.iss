@@ -36,7 +36,7 @@ OutputDir={#ReleaseDir}
 OutputBaseFilename=Sunny-Calendar-Setup
 SetupIconFile=..\calendar-icon.ico
 UninstallDisplayIcon={app}\calendar-icon.ico
-CloseApplications=yes
+CloseApplications=force
 RestartApplications=no
 AppMutex=Local\Sunny.Calendar.CleanTest.Window
 UninstallDisplayName=Sunny Calendar
@@ -57,12 +57,17 @@ Name: "{group}\Sunny Calendar"; Filename: "{app}\Sunny Calendar Demo.exe"; Worki
 Name: "{autodesktop}\Sunny Calendar"; Filename: "{app}\Sunny Calendar Demo.exe"; WorkingDir: "{app}"; IconFilename: "{app}\calendar-icon.ico"; Tasks: desktopicon; AppUserModelID: "Sunny.Calendar.CleanTest"; Check: not FileExists(ExpandConstant('{autodesktop}\Sunny Calendar.lnk'))
 
 [Run]
-Filename: "{app}\Sunny Calendar Demo.exe"; Description: "{cm:LaunchProgram,Sunny Calendar}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\Sunny Calendar Demo.exe"; Description: "{cm:LaunchProgram,Sunny Calendar}"; Flags: nowait postinstall skipifsilent; Check: not IsUpdateHandoff
 
 ; There is deliberately no UninstallDelete rule. Notes and pictures created in
 ; local-data are not installer files and are left in place on uninstall.
 
 [Code]
+function IsUpdateHandoff: Boolean;
+begin
+  Result := ExpandConstant('{param:SUNNYUPDATE|0}') = '1';
+end;
+
 function ShouldSkipPage(PageID: Integer): Boolean;
 begin
   { The desktop shortcut is enabled by default; go straight to Install. }

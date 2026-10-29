@@ -1,11 +1,11 @@
 /* Separate, raised team-add control; the single + remains a personal task. */
-.date-cell.layered .date-top{display:grid;grid-template-columns:minmax(0,1fr) 13px 20px;column-gap:9px;align-items:center;padding-top:1px}
+.date-cell.layered .date-top{display:grid;grid-template-columns:13px minmax(0,1fr) 20px;column-gap:9px;align-items:center;padding-top:1px}
 .date-cell.layered .date-top .date-heading{position:absolute;inset:0;display:block;min-width:0;pointer-events:none}
 .date-cell.layered .date-top .date-number{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;min-width:0;max-width:calc(100% - 68px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 2px;font-size:10px;font-weight:700;text-align:center;pointer-events:auto}
 .date-cell.layered .date-top .today-number{flex-shrink:0;width:22px;height:22px}
-.date-cell.layered .date-top .day-more-tasks{position:absolute;left:3px;top:3px;max-width:26px;padding:0 1px;font-size:8px;line-height:18px;height:18px;color:#1967d2;pointer-events:auto}
+.date-cell.layered .date-top .day-more-tasks{position:absolute;left:23px;top:3px;max-width:22px;padding:0 1px;font-size:8px;line-height:18px;height:18px;color:#1967d2;pointer-events:auto}
 .date-cell.layered .date-top>.add-task{position:static;grid-column:3;opacity:1;width:20px;height:20px;color:#526174;border-radius:4px}
-.date-cell.layered .date-top>.add-team-task{position:relative;grid-column:2;width:12.5px;height:10px;min-width:0;padding:0;border:.5px solid #75a487;border-bottom:1px solid #237243;border-radius:2.5px;background:linear-gradient(#f5fff8,#d9efe1);box-shadow:0 1px 1px #1e6c3826,inset 0 .5px 0 #ffffff;color:#137333;font-size:7px;font-weight:800;letter-spacing:-1px;text-indent:-1px;line-height:8px;cursor:pointer}
+.date-cell.layered .date-top>.add-team-task{position:relative;grid-column:1;justify-self:start;width:12.5px;height:10px;min-width:0;padding:0;border:.5px solid #75a487;border-bottom:1px solid #237243;border-radius:2.5px;background:linear-gradient(#f5fff8,#d9efe1);box-shadow:0 1px 1px #1e6c3826,inset 0 .5px 0 #ffffff;color:#137333;font-size:7px;font-weight:800;letter-spacing:-1px;text-indent:-1px;line-height:8px;cursor:pointer}
 .date-cell.layered .date-top>.add-team-task:hover{background:linear-gradient(#fff,#bde3cb);box-shadow:0 1px 2px #1e6c384a}
 .date-cell.layered .date-top>.add-team-task:active{transform:translateY(.5px);box-shadow:inset 0 .5px 1px #1e6c3826}
 .date-cell.layered .date-top>.add-team-task:disabled{opacity:.45;cursor:default}
@@ -32,4 +32,4 @@
 .team-task-toggle.is-team.team-connected{color:#0b642f;background:#ecfff0;border-color:#48c577;box-shadow:0 0 8px #39d66c55,inset 0 0 5px #69ed9555;text-shadow:0 0 5px #4ce67d88}
 
 /* The smaller visible ++ keeps a comfortable, separate click area. */
-.date-cell.layered .date-top>.add-team-task::after{content:"";position:absolute;inset:-5px -6px;border-radius:5px}
+.date-cell.layered .date-top>.add-team-task::after{content:"";position:absolute;inset:-5px -6px -5px -3px;border-radius:5px}

@@ -1,4 +1,4 @@
-import importlib.util,json,sqlite3,tempfile,threading,unittest
+import importlib.util,json,sqlite3,tempfile,threading,unittest,hashlib,io
 from pathlib import Path
 from unittest.mock import patch
 from contextlib import closing
@@ -65,5 +65,38 @@ class UpdateTests(unittest.TestCase):
         handler=updates.GitHubRedirects()
         for url in ['http://api.github.com/x','https://other.invalid/x','https://api.github.com:8443/x','https://user:password@api.github.com/x']:
             with self.assertRaises(ValueError):handler.redirect_request(None,None,302,'',{},url)
+
+    def test_preparation_downloads_verified_installer_and_makes_backup(self):
+        body=b'MZ FICTIONAL INSTALLER TEST';release={'version':'0.3.1','size':len(body),'sha256':hashlib.sha256(body).hexdigest(),'url':updates.installer_url('0.3.1')}
+        def download(info,path):path.write_bytes(body)
+        with patch.object(updates,'fetch_release',return_value=release),patch.object(updates,'download_installer',side_effect=download):
+            value=self.manager.prepare_installer()
+            self.assertTrue(value['prepared']);self.assertTrue(value['backupCreated'])
+            self.assertEqual(Path(self.manager.prepared['installer']).read_bytes(),body)
+        with patch.object(updates,'native_process_matches',return_value=False),patch.object(updates.subprocess,'Popen') as started:
+            (self.root/'unins000.exe').touch()
+            with self.assertRaises(ValueError):self.manager.launch_installer(123)
+            started.assert_not_called()
+
+    def test_wrong_download_digest_never_becomes_installer(self):
+        body=b'MZ FICTIONAL DOWNLOAD';release={'version':'0.3.1','size':len(body),'sha256':'0'*64,'url':updates.installer_url('0.3.1')}
+        fake=unittest.mock.MagicMock();fake.open.return_value=io.BytesIO(body)
+        target=self.data/'bad.exe'
+        with patch.object(updates.urllib.request,'build_opener',return_value=fake):
+            with self.assertRaises(ValueError):updates.download_installer(release,target)
+        self.assertFalse(target.exists());self.assertFalse(target.with_suffix('.partial').exists())
+
+    def test_download_redirect_allowlist(self):
+        for url in ['http://github.com/setup.exe','https://evil.invalid/setup.exe','https://release-assets.githubusercontent.com:8443/x']:
+            with self.assertRaises(ValueError):updates.DownloadRedirects().redirect_request(None,None,302,'',{},url)
+
+    def test_cancelled_installer_reopens_original_calendar(self):
+        spec=importlib.util.spec_from_file_location('test_apply_update',ROOT/'apply_update.py');runner=importlib.util.module_from_spec(spec);spec.loader.exec_module(runner)
+        folder=self.data/'updates';folder.mkdir();installer=folder/'setup.exe';installer.write_bytes(b'MZ SAMPLE')
+        (self.root/'Sunny Calendar Demo.exe').touch()
+        plan={'root':str(self.root),'installer':str(installer),'size':installer.stat().st_size,'sha256':hashlib.sha256(installer.read_bytes()).hexdigest(),'version':'0.3.1','clientPid':1,'serverPid':2}
+        with patch.object(runner,'wait_for_exit'),patch.object(runner.subprocess,'run',return_value=type('Result',(),{'returncode':2})()),patch.object(runner.subprocess,'Popen') as reopened:
+            runner.run(plan);reopened.assert_called_once()
+        self.assertEqual(json.loads((self.data/'last-update.json').read_text())['result'],'not-finished')
 
 if __name__=='__main__':unittest.main()

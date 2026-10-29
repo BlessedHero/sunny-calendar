@@ -1,4 +1,11 @@
 const Korean={
+  "Sunny Calendar — Update now":"써니전자 캘린더 — 지금 업데이트",
+  "Update":"업데이트",
+  "Opening installer…":"설치 파일 여는 중…",
+  "A backup was saved on this computer. Click Update below. Sunny Calendar will close and reopen. Windows may still ask you to click Install.":"이 컴퓨터에 백업을 저장했습니다. 아래 업데이트를 누르세요. 써니 캘린더가 닫힌 뒤 다시 열립니다. Windows 설치 화면에서 설치를 눌러야 할 수 있습니다.",
+  "Could not start the installer. Your calendar stays open. Try again after saving.":"설치 파일을 시작하지 못했습니다. 캘린더는 열린 상태로 유지됩니다. 저장을 마친 뒤 다시 시도하세요.",
+  "The installer download is open. Use the installed Windows app for the close-and-reopen Update button.":"설치 파일 다운로드를 열었습니다. 캘린더를 닫고 다시 여는 업데이트 버튼은 설치된 Windows 앱에서 사용하세요.",
+
   "Preparing update…":"업데이트 준비 중…",
   "Checking updates…":"업데이트 확인 중…",
   "Check updates":"업데이트 확인",

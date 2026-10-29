@@ -5,3 +5,4 @@
 .app-update-button.update-available{border-color:#7aafe1;color:#174c7e;box-shadow:inset 0 1px 0 #fff,0 0 6px #5ea8e43b}
 .app-update-button img{width:14px;height:14px}.save-bar .app-update-button span{font-size:11px;color:inherit;overflow:hidden;text-overflow:ellipsis}
 .update-info{width:min(460px,92vw);border-radius:16px;padding:26px;background:#fff;border:1px solid #cbdbea;box-shadow:0 14px 50px #1f30412e}.update-info h2{font-size:20px;font-weight:500;margin:0 0 16px}.update-info p{font-size:13px;line-height:1.7;margin-bottom:22px}.update-info>.primary-button{float:right}.update-info::after{content:'';display:block;clear:both}
+.update-dialog-actions{display:flex;justify-content:flex-end;align-items:center;gap:18px}.update-dialog-actions>button{font-size:13px}.update-dialog-actions>button:disabled{opacity:.6;cursor:wait}

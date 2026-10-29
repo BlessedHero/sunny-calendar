@@ -54,7 +54,7 @@ class Handler(SimpleHTTPRequestHandler):
         super().do_GET()
     def do_POST(self):
         if not self.valid_host():return
-        if self.path!='/local-api/documents' and self.path not in {'/local-api/tools/config','/local-api/tools/search','/local-api/tools/open','/local-api/updates/check','/local-api/updates/open','/local-api/updates/shutdown'}:self.send_error(404);return
+        if self.path!='/local-api/documents' and self.path not in {'/local-api/tools/config','/local-api/tools/search','/local-api/tools/open','/local-api/updates/check','/local-api/updates/open','/local-api/updates/prepare','/local-api/updates/launch','/local-api/updates/shutdown'}:self.send_error(404);return
         origin=self.headers.get('Origin','')
         if origin not in {f'http://{h}' for h in ALLOWED} or not self.headers.get('Content-Type','').startswith('application/json'):
             self.send_error(403);return
@@ -67,7 +67,9 @@ class Handler(SimpleHTTPRequestHandler):
                 if not isinstance(payload,dict):raise ValueError('Invalid update request')
                 if self.path=='/local-api/updates/shutdown':
                     self.reply({'closing':True});threading.Thread(target=self.server.shutdown,daemon=True).start();return
-                self.reply(UPDATES.handle_post(self.path,payload));return
+                result=UPDATES.handle_post(self.path,payload);self.reply(result)
+                if result.get('launching'):threading.Thread(target=self.server.shutdown,daemon=True).start()
+                return
             if self.path.startswith('/local-api/tools/'):
                 if n>32768:raise ValueError('Desktop settings are too large.')
                 payload=json.loads(self.rfile.read(n))

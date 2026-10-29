@@ -49,7 +49,7 @@ internal sealed class CalendarWindow : Form
     private readonly string root = AppDomain.CurrentDomain.BaseDirectory;
     private readonly WebView2 web = new WebView2();
     private readonly Label loading = new Label();
-    private bool checkingClose, allowClose;
+    private bool checkingClose, allowClose, updating;
 
     internal CalendarWindow()
     {
@@ -113,6 +113,30 @@ internal sealed class CalendarWindow : Form
                 Uri destination;
                 if (!Uri.TryCreate(args.Uri, UriKind.Absolute, out destination) || destination.Scheme != "http" ||
                     destination.Host != "127.0.0.1" || destination.Port != 4176) args.Cancel = true;
+            };
+            web.CoreWebView2.WebMessageReceived += async (sender, args) =>
+            {
+                if (args.Source != CalendarUrl || updating) return;
+                string message;
+                try { message = args.TryGetWebMessageAsString(); } catch { return; }
+                if (message != "sunny-update-now") return;
+                updating = true;
+                try
+                {
+                    string unsaved = await web.CoreWebView2.ExecuteScriptAsync("(() => { const s=document.querySelector('.save-bar'); return !s || /Saving|Could not save|Opening/.test(s.dataset.saveStatus || s.innerText); })()");
+                    if (unsaved != "false") throw new IOException("Save notes first");
+                    using (var client = new HttpClient(new HttpClientHandler { UseProxy = false }))
+                    {
+                        client.Timeout = TimeSpan.FromSeconds(20);
+                        client.DefaultRequestHeaders.Add("Origin", CalendarUrl.TrimEnd('/'));
+                        string body = "{\"clientPid\":" + Process.GetCurrentProcess().Id + "}";
+                        var response = await client.PostAsync(CalendarUrl + "local-api/updates/launch", new StringContent(body, System.Text.Encoding.UTF8, "application/json"));
+                        response.EnsureSuccessStatusCode();
+                    }
+                    allowClose = true;
+                    Close();
+                }
+                catch { updating = false; if (!IsDisposed) web.CoreWebView2.PostWebMessageAsString("sunny-update-failed"); }
             };
             web.CoreWebView2.NewWindowRequested += (sender, args) => { args.Handled = true; };
             web.CoreWebView2.NavigationCompleted += (sender, args) =>

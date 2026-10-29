@@ -24,9 +24,9 @@ Sunny Calendar checks this project's public GitHub release information when the 
 
 The glossy blue button shows **Update available · v…** when a newer installer is ready, or **Up to date · v…** after a successful check. If the internet check fails, it offers **Check updates** and explains that the calendar still works.
 
-Clicking an available update waits for saved notes, makes a local backup in the app's `local-data/backups` folder, then opens the official installer download in your browser. Open the downloaded file, close Sunny Calendar, and click **Install**. Reopen the app afterward. The backup JSON can be used with **Restore backup**. No silent installation or automatic forced closure is used.
+Clicking an available update waits for saved notes, downloads and verifies this project's official installer, and makes a local backup in the app's `local-data/backups` folder. The **Sunny Calendar — Update now** window offers **Cancel** and **Update**. In the installed Windows app, Update closes the saved calendar, opens the normal Windows installer and reopens the calendar when that installer ends. Windows may still ask you to click **Install**. If you cancel installation, the original calendar reopens. The backup JSON can be used with **Restore backup**. The installer is not silent. Browser previews and working test copies do not replace the installed app automatically.
 
-동료용 앱을 열면 GitHub의 공개 버전 정보만 확인하며, 메모나 그림은 업로드하지 않습니다. 파란 버튼에 **새 버전 v… 업데이트 가능** 또는 **최신 버전 · v…**이 표시됩니다. 업데이트 버튼을 누르면 저장을 마친 뒤 이 컴퓨터에 백업을 만들고 공식 설치 파일 다운로드를 엽니다. 다운로드한 설치 파일을 열고 캘린더를 닫은 뒤 **설치**를 누르세요. 설치 후 앱을 다시 여세요.
+동료용 앱을 열면 GitHub의 공개 버전 정보만 확인하며, 메모나 그림은 업로드하지 않습니다. 파란 버튼에 **새 버전 v… 업데이트 가능** 또는 **최신 버전 · v…**이 표시됩니다. 새 설치 파일을 검증하고 백업을 저장한 뒤 **써니전자 캘린더 — 지금 업데이트** 창이 열립니다. 설치된 Windows 앱에서 **업데이트**를 누르면 저장된 캘린더를 닫고 설치 화면을 연 뒤 캘린더를 다시 엽니다. Windows 화면에서 **설치**를 눌러야 할 수 있습니다. 설치를 취소하면 기존 캘린더가 다시 열립니다.
 
 ## Optional portable ZIP
 
