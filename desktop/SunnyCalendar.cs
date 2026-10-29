@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 
-// A local Windows window for the existing calendar. No cloud or Google access.
+// A local Windows window for the calendar. No calendar upload or Google access.
 internal static class Program
 {
     [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
@@ -144,7 +144,7 @@ internal sealed class CalendarWindow : Form
         {
             // Read the app's visible save status; do not close silently over a failed save.
             string result = await web.CoreWebView2.ExecuteScriptAsync(
-                "(() => { const s=document.querySelector('.save-bar'); return !!s && /Saving|Could not save/.test(s.innerText); })()");
+                "(() => { const s=document.querySelector('.save-bar'); return !s || /Saving|Could not save|Opening/.test(s.dataset.saveStatus || s.innerText); })()");
             unsaved = result == "true";
         }
         catch { }
@@ -152,6 +152,20 @@ internal sealed class CalendarWindow : Form
             "Some notes may still need saving. Choose Cancel to keep this window open and use Export backup.\n\nClose anyway?",
             "Sunny Calendar", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.OK)
         {
+            if (!unsaved)
+            {
+                // Exit the local helper too, so the next open loads updated files.
+                try
+                {
+                    using (var client = new HttpClient(new HttpClientHandler { UseProxy = false }))
+                    {
+                        client.Timeout = TimeSpan.FromSeconds(2);
+                        client.DefaultRequestHeaders.Add("Origin", CalendarUrl.TrimEnd('/'));
+                        await client.PostAsync(CalendarUrl + "local-api/updates/shutdown", new StringContent("{}", System.Text.Encoding.UTF8, "application/json"));
+                    }
+                }
+                catch { }
+            }
             allowClose = true;
             Close();
         }

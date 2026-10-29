@@ -1,26 +1,35 @@
 /* Separate, raised team-add control; the single + remains a personal task. */
-.date-cell.layered .date-top{display:grid;grid-template-columns:minmax(0,1fr) 25px 20px;column-gap:9px;align-items:center;padding-top:1px}
-.date-cell.layered .date-top .date-heading{display:flex;align-items:center;justify-content:flex-start;min-width:0;gap:2px;grid-column:1}
-.date-cell.layered .date-top .date-number{display:block;min-width:0;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 2px;font-size:10px;flex-shrink:1}
+.date-cell.layered .date-top{display:grid;grid-template-columns:minmax(0,1fr) 13px 20px;column-gap:9px;align-items:center;padding-top:1px}
+.date-cell.layered .date-top .date-heading{position:absolute;inset:0;display:block;min-width:0;pointer-events:none}
+.date-cell.layered .date-top .date-number{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;min-width:0;max-width:calc(100% - 68px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 2px;font-size:10px;font-weight:700;text-align:center;pointer-events:auto}
 .date-cell.layered .date-top .today-number{flex-shrink:0;width:22px;height:22px}
-.date-cell.layered .date-top .day-more-tasks{position:static;max-width:none;padding:0 1px;font-size:8px;line-height:18px;height:18px;flex-shrink:0;color:#1967d2}
+.date-cell.layered .date-top .day-more-tasks{position:absolute;left:3px;top:3px;max-width:26px;padding:0 1px;font-size:8px;line-height:18px;height:18px;color:#1967d2;pointer-events:auto}
 .date-cell.layered .date-top>.add-task{position:static;grid-column:3;opacity:1;width:20px;height:20px;color:#526174;border-radius:4px}
-.date-cell.layered .date-top>.add-team-task{position:relative;grid-column:2;width:25px;height:20px;padding:0;border:1px solid #d77d82;border-bottom:2px solid #a63843;border-radius:5px;background:linear-gradient(#fff7f7,#f9dadd);box-shadow:0 2px 2px #8b273326,inset 0 1px 0 #ffffff;color:#be2435;font-size:13px;font-weight:800;letter-spacing:-2px;text-indent:-2px;line-height:16px;cursor:pointer}
-.date-cell.layered .date-top>.add-team-task:hover{background:linear-gradient(#fff,#f4bcc4);box-shadow:0 2px 4px #8b27334a}
-.date-cell.layered .date-top>.add-team-task:active{transform:translateY(1px);box-shadow:inset 0 1px 2px #8b273326}
+.date-cell.layered .date-top>.add-team-task{position:relative;grid-column:2;width:12.5px;height:10px;min-width:0;padding:0;border:.5px solid #75a487;border-bottom:1px solid #237243;border-radius:2.5px;background:linear-gradient(#f5fff8,#d9efe1);box-shadow:0 1px 1px #1e6c3826,inset 0 .5px 0 #ffffff;color:#137333;font-size:7px;font-weight:800;letter-spacing:-1px;text-indent:-1px;line-height:8px;cursor:pointer}
+.date-cell.layered .date-top>.add-team-task:hover{background:linear-gradient(#fff,#bde3cb);box-shadow:0 1px 2px #1e6c384a}
+.date-cell.layered .date-top>.add-team-task:active{transform:translateY(.5px);box-shadow:inset 0 .5px 1px #1e6c3826}
 .date-cell.layered .date-top>.add-team-task:disabled{opacity:.45;cursor:default}
 /* The ring is inset, so cards never spill into a neighboring date. */
-.task-card.team-task-card,.date-cell.layered .task-card.team-task-card:has(.rich-editor:focus){box-shadow:inset 0 0 0 2px #b63c4a;border-radius:5px}
-.team-task-marker{position:absolute;right:3px;top:2px;padding:0 2px;min-width:14px;height:12px;border-radius:3px;background:#fff0f2;color:#b3263a;font-size:9px;font-weight:800;line-height:11px;letter-spacing:-1px;pointer-events:none}
-.full-day-task.team-task-card,.sidebar-task.team-task-card{box-shadow:inset 0 0 0 2px #b63c4a;border-radius:7px}
+.task-card.team-task-card,.date-cell.layered .task-card.team-task-card:has(.rich-editor:focus){box-shadow:inset 0 0 0 2px var(--task-text-color,#137333);border-radius:5px;border-left-color:#137333}
+.team-task-marker{position:absolute;right:3px;top:2px;padding:0 2px;min-width:14px;height:12px;border-radius:3px;background:#edf8f0;color:var(--task-text-color,#137333);font-size:9px;font-weight:800;line-height:11px;letter-spacing:-1px;pointer-events:none}
+.full-day-task.team-task-card,.sidebar-task.team-task-card{box-shadow:inset 0 0 0 2px var(--task-text-color,#137333);border-radius:7px;border-left:3px solid #137333}
 .sidebar-task.team-task-card{padding-top:10px;padding-bottom:10px}.sidebar-task.team-task-card .task-check{top:10px}
 .team-task-toggle{display:inline-flex;align-items:center;gap:5px;border:1px solid #d1d9e5;border-radius:15px;padding:5px 9px;font-size:10px;color:#66748a;background:#fff;white-space:nowrap}
-.team-task-toggle>b{font-size:12px;letter-spacing:-1px}.team-task-toggle.is-team{border-color:#d88a94;background:#fff0f2;color:#a3283d;font-weight:600}.team-task-toggle:hover{background:#fce4e9}
-.team-draft-notice{margin:0;padding:9px 24px;font-size:11px;line-height:1.5;background:#fff0f2;color:#9c2f40;border-bottom:1px solid #efd3d9}
-.sidebar-team-label{display:block!important;font-size:9px!important;color:#a3283d!important;font-weight:600;margin-bottom:4px}
+.team-task-toggle>b{font-size:12px;letter-spacing:-1px}.team-task-toggle.is-team{border-color:#83b295;background:#edf8f0;color:#137333;font-weight:600}.team-task-toggle:hover{background:#dff1e5}
+.team-draft-notice{margin:0;padding:9px 24px;font-size:11px;line-height:1.5;background:#edf8f0;color:#24643a;border-bottom:1px solid #cfe5d6}
+.sidebar-team-label{display:block!important;font-size:9px!important;color:var(--task-text-color,#137333)!important;font-weight:600;margin-bottom:4px}
 .dialog-title-actions{flex-wrap:wrap;justify-content:flex-end}.full-day-task-actions{flex-wrap:wrap}
 @media(prefers-reduced-motion:reduce){.add-team-task:active{transform:none}}
 
-.team-mode-dialog{width:min(490px,calc(100vw - 40px));max-height:calc(100vh - 60px);border:1px solid #e4cbd0;border-radius:18px;padding:25px;background:#fffafb;color:#28364b;box-shadow:0 18px 65px #28364b40;overflow:auto}
+.team-mode-dialog{width:min(490px,calc(100vw - 40px));max-height:calc(100vh - 60px);border:1px solid #c9e1d1;border-radius:18px;padding:25px;background:#fbfffc;color:#28364b;box-shadow:0 18px 65px #28364b40;overflow:auto}
 .team-mode-dialog::backdrop{background:#25334852;backdrop-filter:blur(2px)}
-.team-mode-dialog h2{font-size:20px;font-weight:500;margin:0 0 14px}.team-mode-dialog p{font-size:12px;line-height:1.65;margin:12px 0;word-break:keep-all}.team-mode-dialog .team-connection-status{background:#fff0d9;color:#8b5a18;border:1px solid #efd6ad;border-radius:7px;padding:8px 11px}.team-mode-dialog>div{display:flex;justify-content:flex-end;gap:12px;margin-top:22px}.team-mode-dialog>div>button{font-size:12px;padding:9px 15px;border-radius:20px}.settings-menu .sharing-setting-status{display:block;font-size:10px;color:#9c6130;padding:4px 0 8px}.settings-menu .sharing-setup-link{float:none;font-size:11px;padding:7px 0;color:#a3283d}
+.team-mode-dialog h2{font-size:20px;font-weight:500;margin:0 0 14px}.team-mode-dialog p{font-size:12px;line-height:1.65;margin:12px 0;word-break:keep-all}.team-mode-dialog .team-connection-status{background:#fff0d9;color:#8b5a18;border:1px solid #efd6ad;border-radius:7px;padding:8px 11px}.team-mode-dialog>div{display:flex;justify-content:flex-end;gap:12px;margin-top:22px}.team-mode-dialog>div>button{font-size:12px;padding:9px 15px;border-radius:20px}.settings-menu .sharing-setting-status{display:block;font-size:10px;color:#9c6130;padding:4px 0 8px}.settings-menu .sharing-setup-link{float:none;font-size:11px;padding:7px 0;color:#137333}
+
+/* Connection status is separate from task completion and the local mode switch.
+   Until an actual sync connection exists, TeamTaskToggle defaults to offline. */
+.team-task-toggle.is-team.team-offline{color:#6b7280;background:#f3f4f6;border-color:#cfd3d8;box-shadow:none;text-shadow:none}
+.team-task-toggle.is-team.team-offline:hover{background:#e8ebef}
+.team-task-toggle.is-team.team-connected{color:#0b642f;background:#ecfff0;border-color:#48c577;box-shadow:0 0 8px #39d66c55,inset 0 0 5px #69ed9555;text-shadow:0 0 5px #4ce67d88}
+
+/* The smaller visible ++ keeps a comfortable, separate click area. */
+.date-cell.layered .date-top>.add-team-task::after{content:"";position:absolute;inset:-5px -6px;border-radius:5px}

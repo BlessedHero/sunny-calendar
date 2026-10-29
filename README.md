@@ -18,6 +18,16 @@ This is an early test release. The app is unsigned, so Windows may warn about an
 
 This separate Windows demo contains only fictional SAMPLE entries for ABC Company and XYZ Company, plus sample tasks and memos. You can edit or delete every example. Korean public holidays remain as calendar reference dates. No company records, old screenshots, workbook data, browser profiles, databases or backups are included.
 
+## Updating after this version is installed
+
+Sunny Calendar checks this project's public GitHub release information when the app opens. It does not upload your notes or pictures. Reloads within 15 minutes may reuse the last successful check. There are no update alerts while the app is closed.
+
+The glossy blue button shows **Update available · v…** when a newer installer is ready, or **Up to date · v…** after a successful check. If the internet check fails, it offers **Check updates** and explains that the calendar still works.
+
+Clicking an available update waits for saved notes, makes a local backup in the app's `local-data/backups` folder, then opens the official installer download in your browser. Open the downloaded file, close Sunny Calendar, and click **Install**. Reopen the app afterward. The backup JSON can be used with **Restore backup**. No silent installation or automatic forced closure is used.
+
+동료용 앱을 열면 GitHub의 공개 버전 정보만 확인하며, 메모나 그림은 업로드하지 않습니다. 파란 버튼에 **새 버전 v… 업데이트 가능** 또는 **최신 버전 · v…**이 표시됩니다. 업데이트 버튼을 누르면 저장을 마친 뒤 이 컴퓨터에 백업을 만들고 공식 설치 파일 다운로드를 엽니다. 다운로드한 설치 파일을 열고 캘린더를 닫은 뒤 **설치**를 누르세요. 설치 후 앱을 다시 여세요.
+
 ## Optional portable ZIP
 
 1. Right-click the downloaded ZIP and choose Extract All.
@@ -58,7 +68,7 @@ Sample entries are created only once, in the month when a new user first opens t
 
 
 ## Team drafts and network search
-Each date has a raised red **++** beside the personal **+**. The first ++ asks to enable team draft mode. The setting stays on until turned off in Settings. Team draft cards have a bold outline. Turning the mode off keeps existing drafts. These drafts still save only on this computer; coworker syncing is **not connected**.
+Each date has a raised green **++** beside the personal **+**. The first ++ asks to enable team draft mode. The setting stays on until turned off in Settings. Team tasks start green with a bold outline. Checking a task turns it black; unchecking restores its previous color. The color buttons can change an unfinished team task's whole text and outline. Personal tasks keep red/black completion colors. Turning the mode off keeps existing tasks. These tasks still save only on this computer; coworker syncing is **not connected**. The grey **Team not connected** badge reflects that state. A green glowing **Team connected** badge is reserved for a future real sync connection; enabling the local mode does not connect coworkers.
 
 Click the top magnifying glass to open and focus the left search. Ordinary words find calendar notes. Type two backslashes followed by a computer name and press Enter, or click Open network computer, to open that computer in Windows File Explorer. Windows uses the access you already have. This does not enable shared calendar syncing. To search filenames inside a network share, add the specific shared folder through Search files > Search folders.
 

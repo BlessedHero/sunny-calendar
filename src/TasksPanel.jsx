@@ -1,3 +1,4 @@
+import {taskTextColor} from './task-colors';
 import {useI18n} from './i18n';
 import React from 'react';
 import {taskLayers,isTaskComplete,isTeamTask,MAX_TASKS,PREVIEW_TASKS} from './task-layers';
@@ -15,7 +16,7 @@ export function TasksPanel({doc,ready,today,tomorrow,onDate,onClose,onOpen,onAdd
     <div className="sidebar-task-list">{layers.map((html,index)=>{
       const lines=plainText(html).trim().split('\n').filter(Boolean);
       const done=isTaskComplete(doc,index);
-      return <article className={`sidebar-task task-${index%PREVIEW_TASKS+1} ${done?'is-completed':'is-pending'} ${isTeamTask(doc,index)?'team-task-card':''}`} key={index}>
+      return <article className={`sidebar-task task-${index%PREVIEW_TASKS+1} ${done?'is-completed':'is-pending'} ${!done&&taskTextColor(doc,index)==='#b3261e'?'task-red-pending':''} ${isTeamTask(doc,index)?'team-task-card':''}`} style={{'--task-text-color':taskTextColor(doc,index)}} key={index}>
         <TaskCheck doc={doc} index={index} onChange={onComplete} enabled={ready}/>
         <button className="sidebar-task-open" aria-label={t(`Open task ${index+1} for ${doc.date}`)} title={t(`Open task ${index+1} for ${doc.date}`)} onClick={()=>onOpen(doc,index)}>{isTeamTask(doc,index)&&<span className="sidebar-team-label">{t('Team draft — local only')}</span>}<strong>{lines[0]||t('Task')+' '+(index+1)}</strong>{lines.length>1&&<span>{lines.slice(1).join('\n')}</span>}<small>{t("More · Edit")}</small></button>
         <button className="sidebar-task-delete" title={t("Delete this task")} aria-label={t(`Delete task ${index+1} for ${doc.date}`)} disabled={!ready} onClick={()=>onDelete(doc,index)}><img className="icon" src="/icons/delete.svg" alt=""/></button>

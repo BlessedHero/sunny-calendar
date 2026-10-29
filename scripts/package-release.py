@@ -14,7 +14,7 @@ assert seed['docs']==[] and seed['review']==[],'Release seed must be empty'
 files=[]
 for folder in ('dist/client','runtime','licenses'):
     files.extend(p for p in (root/folder).rglob('*') if p.is_file() and '__pycache__' not in p.parts)
-files.extend(root/name for name in ('Sunny Calendar Demo.exe','Microsoft.Web.WebView2.Core.dll','Microsoft.Web.WebView2.WinForms.dll','WebView2Loader.dll','calendar-icon.ico','start-calendar.py','desktop_tools.py','sample_data.py','demo-samples.json','README.md','LICENSE','CHANGELOG.md'))
+files.extend(root/name for name in ('Sunny Calendar Demo.exe','Microsoft.Web.WebView2.Core.dll','Microsoft.Web.WebView2.WinForms.dll','WebView2Loader.dll','calendar-icon.ico','start-calendar.py','calendar_updates.py','app-release.json','desktop_tools.py','sample_data.py','demo-samples.json','README.md','LICENSE','CHANGELOG.md'))
 portable=out/f'Sunny-Calendar-Demo-Windows-{version}.zip'
 with zipfile.ZipFile(portable,'w',zipfile.ZIP_DEFLATED) as z:
     for path in files:

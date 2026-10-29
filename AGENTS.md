@@ -10,10 +10,24 @@
 - Local filename search starts with only this computer's Work_files folder. Users choose any network share themselves. Use generic computer names in examples.
 - Build with npm run build. Keep the Sites worker, hosting config and preparation script intact.
 
-- Each date has a separated, always-visible, raised red ++ beside the normal +. Single + creates a personal task; ++ creates a locally saved team draft. Draft cards keep their pastel/completion colors and receive a bold inset outline plus ++ marker. Label team drafts as local-only until real coworker sync exists. Persist teamLayers flags per task, preserve them through edits/completion/delete/Undo/export/restore, and do not mark any existing real task as shared automatically.
+- Each date has a separated, always-visible, raised green ++ beside the normal +. Single + creates a personal task; ++ creates a locally saved team draft. Team cards keep their pastel backgrounds and use their saved shared-task/completion colors and receive a bold inset outline plus ++ marker. Label team drafts as local-only until real coworker sync exists. Persist teamLayers flags per task, preserve them through edits/completion/delete/Undo/export/restore, and do not mark any existing real task as shared automatically.
 
 - Use one Sunny office sharing group. The first ++ click opens setup; enabling the app-wide team draft mode persists across restarts until disabled in Settings. Subsequent ++ clicks do not ask again while enabled. Turning the mode off must preserve tasks and drafts. Status remains explicitly Not connected until real network sync is implemented; do not claim that a draft-mode preference connects coworkers.
 
 - The top magnifying glass reveals and focuses the left sidebar search. Ordinary text filters calendar notes; a two-backslash computer address plus Enter or Open network computer uses the existing Windows Explorer network action. Do not filter calendar notes for a network address, claim reachability from launching Explorer, or change Windows network settings. Keep labels and guidance bilingual.
 
 - Remove the old Google Calendar reminder from the bottom bar. Keep the saved/saving status and save guard.
+
+- Shared/team drafts default to green text, green completion checkbox, green inset outline and green ++ controls. Completed tasks display black; reopening restores their previous chosen color (green by default). The ten swatches may change the whole unfinished team task color; personal tasks remain red/black and reference notes retain selected-text colors. Preserve taskColors per layer through save, edits, completion, delete, Undo and backup/restore; never rewrite private rich text or automatically mark personal tasks as shared. Real coworker sync remains Not connected.
+
+- The task team badge uses Team connected (팀 연결됨) with a restrained green neon glow only for a real established coworker sync connection. Otherwise show grey Team not connected (팀 연결 안 됨). The local team-mode setting must never be treated as a real network connection; current edition remains disconnected.
+
+- Keep the visible green date-header ++ button half its former 25x20 size (12.5x10 CSS pixels), with a separate invisible click cushion. Task checkboxes are one-third smaller (15px to 10px), with matching smaller ticks. Show unfinished red task text in standard bold (700) across date previews, full task/day editors and the Tasks panel, while preserving saved rich text and all completion/color rules.
+
+- Every shared/team task has a green left stripe in month cards, full-day cards and the Tasks panel, replacing the normal yellow/blue/purple left stripe. Keep that shared-group stripe green even when text changes color or is completed; keep pastel backgrounds and the existing completion/text-color rules.
+
+- Weekday headings in the main calendar are 50 percent larger (10px to 15px) and bold (700), in English and Korean. Date numbers and month/day labels in each date box are bold (700) at their existing size. Keep the existing date-header height, small ++ controls, checkboxes and saved calendar data unchanged.
+
+- Center every date number (including today and month/day labels) in the full width of its day header, not in the space remaining beside the add buttons. Keep ++ and + on the right, and extra-task count on the left. Date numbers remain bold.
+
+- Use the simple, low-maintenance update flow approved by the user: a glossy light-blue footer button checks the public GitHub latest stable release once when the app opens (short reloads may reuse a recent result), with no closed-app notifications or weekly manual GitHub visits. Show Update available · vX.Y.Z or Up to date · vX.Y.Z only after a successful check; failed/offline checks must not claim success. Clicking an available update waits for saves, writes a local Restore-compatible backup, then opens only this project’s official installer in the browser. Users click Install themselves. Never silently run installers, force app closure, upload notes, or replace the private working edition with the clean edition. Keep labels and error messages English/Korean.

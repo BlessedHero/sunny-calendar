@@ -1,5 +1,22 @@
 # Change history
 
+## 0.3.0 — 2026-10-29
+
+- Added a glossy blue update button with an automatic release check when the app opens, honest offline status, a local backup before opening the official installer, and English/Korean guidance.
+- Kept installation manual as requested. The app does not silently install software or notify users while closed.
+- Centered date numbers across every day header while keeping add controls on the right.
+
+- Enlarged weekday headings by 50 percent and made weekday names and date numbers bold.
+
+- Shared task cards use a green left stripe in every view while keeping their pastel backgrounds.
+
+- Halved the visible ++ controls, reduced task checkboxes by one-third, and made unfinished red task text bold.
+
+- Team tasks and ++ controls now default to green. Completion turns task text and outlines black; reopening restores the saved color.
+- Added manual whole-task colors for unfinished team tasks, preserved through deletion, Undo, save and backup.
+- Replaced the team-task badge with grey Team not connected. A green neon Team connected style is reserved for a real future sync connection; local team mode is not a network connection.
+- Updated English/Korean color guidance. Personal tasks keep red/black completion colors.
+
 ## 0.2.2 — 2026-10-29
 
 - Replaced the public history with a project-only author identity.

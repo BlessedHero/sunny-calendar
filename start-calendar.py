@@ -12,6 +12,9 @@ PORT=4176
 URL=f'http://127.0.0.1:{PORT}/'
 DATA=ROOT/'local-data'
 LOCK=threading.Lock()
+_update_spec=importlib.util.spec_from_file_location('sunny_calendar_updates',ROOT/'calendar_updates.py')
+UPDATES_MODULE=importlib.util.module_from_spec(_update_spec);_update_spec.loader.exec_module(UPDATES_MODULE)
+UPDATES=UPDATES_MODULE.UpdateManager(ROOT,DATA,LOCK)
 ALLOWED={f'127.0.0.1:{PORT}',f'localhost:{PORT}'}
 DOC_ID=re.compile(r'^(work:\d{4}-\d{2}-\d{2}|reference:\d{4}-\d{2}|memo:[a-zA-Z0-9-]+)$')
 
@@ -40,6 +43,7 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         if not self.valid_host():return
         if DESKTOP_TOOLS.handle_get(self,self.path,DATA):return
+        if UPDATES.handle_get(self,self.path):return
         if self.path=='/local-api/status':self.reply({'app':'Sunny Calendar','storage':'local-file','version':1,'edition':'clean-test'});return
         if self.path=='/local-api/documents':
             with LOCK,connection() as db:
@@ -50,13 +54,20 @@ class Handler(SimpleHTTPRequestHandler):
         super().do_GET()
     def do_POST(self):
         if not self.valid_host():return
-        if self.path!='/local-api/documents' and self.path not in {'/local-api/tools/config','/local-api/tools/search','/local-api/tools/open'}:self.send_error(404);return
+        if self.path!='/local-api/documents' and self.path not in {'/local-api/tools/config','/local-api/tools/search','/local-api/tools/open','/local-api/updates/check','/local-api/updates/open','/local-api/updates/shutdown'}:self.send_error(404);return
         origin=self.headers.get('Origin','')
         if origin not in {f'http://{h}' for h in ALLOWED} or not self.headers.get('Content-Type','').startswith('application/json'):
             self.send_error(403);return
         try:
             n=int(self.headers.get('Content-Length','0'))
             if not 0<n<=30_000_000:raise ValueError('Size')
+            if self.path.startswith('/local-api/updates/'):
+                if n>1024:raise ValueError('Invalid update request')
+                payload=json.loads(self.rfile.read(n))
+                if not isinstance(payload,dict):raise ValueError('Invalid update request')
+                if self.path=='/local-api/updates/shutdown':
+                    self.reply({'closing':True});threading.Thread(target=self.server.shutdown,daemon=True).start();return
+                self.reply(UPDATES.handle_post(self.path,payload));return
             if self.path.startswith('/local-api/tools/'):
                 if n>32768:raise ValueError('Desktop settings are too large.')
                 payload=json.loads(self.rfile.read(n))
@@ -71,7 +82,7 @@ class Handler(SimpleHTTPRequestHandler):
                 rev=current+1
                 db.execute('INSERT INTO documents(id,body,revision) VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET body=excluded.body,revision=excluded.revision',(key,json.dumps(doc,ensure_ascii=False),rev))
             self.reply({'revision':rev})
-        except (ValueError,TypeError,KeyError,json.JSONDecodeError) as error:self.reply({'error':str(error) if self.path.startswith('/local-api/tools/') else 'Invalid local note'},400)
+        except (ValueError,TypeError,KeyError,json.JSONDecodeError) as error:self.reply({'error':str(error) if self.path.startswith(('/local-api/tools/','/local-api/updates/')) else 'Invalid local note'},400)
         except Exception:self.reply({'error':'Could not open this item. Check that the app or folder is available.' if self.path.startswith('/local-api/tools/') else 'Local save failed'},500)
 
 def running():

@@ -1,3 +1,4 @@
+import {taskTextColor} from './task-colors';
 import {sanitizeHTML,plainText} from './local-store';
 const cache=new Map();
 export const MAX_TASKS=20;
@@ -26,7 +27,7 @@ export function taskLayers(doc){
   cache.set(html,result.length?result:[html]);return result.length?result:[html];
 }
 export function layerDocument(owner,index){
-  return {...owner,id:owner.id+'::task:'+index,ownerId:owner.id,layerIndex:index,completed:isTaskComplete(owner,index),teamDraft:isTeamTask(owner,index),html:taskLayers(owner)[index]||''};
+  return {...owner,id:owner.id+'::task:'+index,ownerId:owner.id,layerIndex:index,completed:isTaskComplete(owner,index),teamDraft:isTeamTask(owner,index),textColor:taskTextColor(owner,index),html:taskLayers(owner)[index]||''};
 }
 export const isTaskComplete=(owner,index)=>owner.completedLayers?.[index]===true;
 

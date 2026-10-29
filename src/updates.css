@@ -1,0 +1,7 @@
+.app-update-control{display:flex;align-items:center;margin-left:auto;min-width:0}
+.app-update-button{display:flex;align-items:center;gap:6px;min-height:24px;max-width:100%;padding:3px 11px;border:1px solid #afcce8;border-bottom-color:#87afd4;border-radius:14px;background:linear-gradient(180deg,#ffffffed 0%,#eaf7ffed 44%,#d2eafd 50%,#e7f5ff 100%);box-shadow:inset 0 1px 0 #fff,0 1px 3px #3979ad22;color:#225d91;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer}
+.app-update-button:hover:not(:disabled){background:linear-gradient(#fff,#cce8ff);box-shadow:inset 0 1px 0 #fff,0 1px 6px #3979ad44}
+.app-update-button:focus-visible{outline:2px solid #1a73e8;outline-offset:2px}.app-update-button:disabled{opacity:.7;cursor:default}
+.app-update-button.update-available{border-color:#7aafe1;color:#174c7e;box-shadow:inset 0 1px 0 #fff,0 0 6px #5ea8e43b}
+.app-update-button img{width:14px;height:14px}.save-bar .app-update-button span{font-size:11px;color:inherit;overflow:hidden;text-overflow:ellipsis}
+.update-info{width:min(460px,92vw);border-radius:16px;padding:26px;background:#fff;border:1px solid #cbdbea;box-shadow:0 14px 50px #1f30412e}.update-info h2{font-size:20px;font-weight:500;margin:0 0 16px}.update-info p{font-size:13px;line-height:1.7;margin-bottom:22px}.update-info>.primary-button{float:right}.update-info::after{content:'';display:block;clear:both}

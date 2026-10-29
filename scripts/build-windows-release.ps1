@@ -24,6 +24,10 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Frontend build failed.' }
     npm.cmd run test:sites
     if ($LASTEXITCODE -ne 0) { throw 'Existing worker tests failed.' }
+    & (Join-Path $taskBuildRoot 'runtime/python.exe') -m unittest discover -s tests -p 'test_calendar_updates.py'
+    if ($LASTEXITCODE -ne 0) { throw 'Update checker and backup tests failed.' }
+    node --test tests/task-colors.test.mjs
+    if ($LASTEXITCODE -ne 0) { throw 'Task color tests failed.' }
     & (Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe') /nologo /target:winexe /platform:x64 '/out:Sunny Calendar Demo.exe' /win32icon:calendar-icon.ico /win32manifest:desktop\app.manifest /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.Net.Http.dll /reference:Microsoft.Web.WebView2.Core.dll /reference:Microsoft.Web.WebView2.WinForms.dll desktop\SunnyCalendar.cs
     if ($LASTEXITCODE -ne 0) { throw 'Windows launcher build failed.' }
     $taskPython = Join-Path $taskBuildRoot 'runtime/python.exe'
