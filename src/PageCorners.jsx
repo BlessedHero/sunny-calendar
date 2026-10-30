@@ -4,8 +4,8 @@ import React from 'react';
 export function PageCorners({onTurn,busy}){
   const {t,language}=useI18n();
   return <>{['top-left','bottom-left','top-right','bottom-right'].map(corner=>{
-    const forward=corner.endsWith('left');
-    return <button key={corner} className={`page-corner ${corner}`} aria-label={t(`${forward?'Next':'Previous'} month from ${corner.replace('-',' ')} corner`)} title={t(`${forward?'Next':'Previous'} month — turn page`)} disabled={busy} onClick={()=>onTurn(forward?1:-1)}><span aria-hidden="true">{forward?'›':'‹'}</span></button>;
+    const forward=corner.startsWith('top');
+    return <button key={corner} className={`page-corner ${corner}`} aria-label={t(`${forward?'Next':'Previous'} month from ${corner.replace('-',' ')} corner`)} title={t(`${forward?'Next':'Previous'} month — turn page`)} disabled={busy} onClick={()=>onTurn(forward?1:-1)}><span className="corner-arrow" aria-hidden="true">{forward?'↑':'↓'}</span><span className="corner-label" aria-hidden="true">{t(forward?'UP MONTH':'DOWN MONTH')}</span></button>;
   })}</>;
 }
 

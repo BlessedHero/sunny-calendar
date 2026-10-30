@@ -12,7 +12,7 @@ OPEN_TYPES={'.pdf','.xlsx','.xls','.xlsm','.docx','.doc','.pptx','.ppt','.txt','
 SKIP={'.git','node_modules','$recycle.bin','system volume information','__pycache__','.obsidian'}
 
 def defaults():
-    return {'roots':[{'label':'Work files','path':str(Path.home()/'Documents'/'Work_files')}], 'links':[{'label':'','target':''} for _ in range(3)]}
+    return {'roots':[{'label':'Work files','path':str(Path.home()/'Documents'/'Work_files')}], 'links':[{'label':'','target':''} for _ in range(3)], 'apps':{kind:{'path':'','visible':True} for kind in ('obsidian','pos','vpn')}}
 
 def read_config(data):
     try:
@@ -37,6 +37,15 @@ def link_target(value):
         return value
     return folder_path(value)
 
+def app_path(value):
+    if not value:return ''
+    if not isinstance(value,str):raise ValueError('Choose a Windows app (.exe file).')
+    value=value.strip()
+    if value.startswith('"') and value.endswith('"'):value=value[1:-1]
+    value=folder_path(value)
+    if ntpath.splitext(value)[1].casefold()!='.exe':raise ValueError('Choose a Windows app (.exe file).')
+    return value
+
 def validate_config(value):
     if not isinstance(value,dict):raise ValueError('Invalid settings.')
     roots=value.get('roots',[]);links=value.get('links',[])
@@ -50,7 +59,14 @@ def validate_config(value):
         target=link_target(r.get('target',''));label=str(r.get('label','')).strip()[:40]
         if target and not label:raise ValueError('Add a shortcut name.')
         clean_links.append({'label':label,'target':target})
-    return {'roots':clean_roots,'links':(clean_links+[{'label':'','target':''} for _ in range(3)])[:3]}
+    apps=value.get('apps',{})
+    if not isinstance(apps,dict):raise ValueError('Invalid app settings.')
+    clean_apps={}
+    for kind in ('obsidian','pos','vpn'):
+        entry=apps.get(kind,{})
+        if not isinstance(entry,dict) or not isinstance(entry.get('visible',True),bool):raise ValueError('Invalid app settings.')
+        clean_apps[kind]={'path':app_path(entry.get('path','')),'visible':entry.get('visible',True)}
+    return {'roots':clean_roots,'links':(clean_links+[{'label':'','target':''} for _ in range(3)])[:3], 'apps':clean_apps}
 
 def save_config(data,value):
     clean=validate_config(value);data.mkdir(exist_ok=True)
@@ -58,8 +74,73 @@ def save_config(data,value):
         temporary=data/'desktop-tools.tmp';temporary.write_text(json.dumps(clean,ensure_ascii=False,indent=2),encoding='utf-8');temporary.replace(data/'desktop-tools.json')
     return clean
 
-def obsidian_installed():
-    return any(p.is_file() for p in [Path(os.environ.get('LOCALAPPDATA',''))/'Programs/Obsidian/Obsidian.exe',Path(os.environ.get('LOCALAPPDATA',''))/'Obsidian/Obsidian.exe',Path(os.environ.get('PROGRAMFILES','C:\\Program Files'))/'Obsidian/Obsidian.exe'])
+def registry_app_paths(names):
+    """Read installed-app registrations only; never change Windows settings."""
+    if os.name!='nt':return []
+    import winreg
+    found=[]
+    for hive in (winreg.HKEY_CURRENT_USER,winreg.HKEY_LOCAL_MACHINE):
+        for view in (winreg.KEY_WOW64_64KEY,winreg.KEY_WOW64_32KEY):
+            for name in names:
+                try:
+                    with winreg.OpenKey(hive,'Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\'+name,0,winreg.KEY_READ|view) as key:
+                        value,_=winreg.QueryValueEx(key,None)
+                    found.append(Path(app_path(os.path.expandvars(value))))
+                except (OSError,ValueError,TypeError):pass
+    return found
+
+def resolve_app(kind,config):
+    custom=config['apps'][kind]['path']
+    if custom:return Path(custom) if Path(custom).is_file() else None
+    program_roots=[Path(os.environ.get(name,fallback)) for name,fallback in (
+        ('PROGRAMFILES',r'C:\Program Files'),('PROGRAMFILES(X86)',r'C:\Program Files (x86)'),('ProgramW6432',r'C:\Program Files'))]
+    if kind=='pos':
+        # A dated POS executable varies by workstation. Do not guess among versions.
+        order=Path(os.environ.get('SystemDrive','C:')+'\\Order')
+        try:candidates=[p for p in order.glob('sales*.exe') if p.is_file()]
+        except OSError:candidates=[]
+        return candidates[0] if len(candidates)==1 else None
+    if kind=='vpn':
+        names=('vpncmgr_x64.exe','vpncmgr.exe')
+        candidates=registry_app_paths(names)+[base/'SoftEther VPN Client'/name for base in program_roots for name in names]
+    elif kind=='obsidian':
+        local=Path(os.environ.get('LOCALAPPDATA',''))
+        candidates=registry_app_paths(('Obsidian.exe',))+[local/'Programs/Obsidian/Obsidian.exe',local/'Obsidian/Obsidian.exe']+[base/'Obsidian/Obsidian.exe' for base in program_roots]
+    else:return None
+    return next((p for p in candidates if p.is_file()),None)
+
+def pick_app_file():
+    """Windows common file dialog, with no command shell or app execution."""
+    class OpenFileName(ctypes.Structure):
+        _fields_=[('lStructSize',wintypes.DWORD),('hwndOwner',wintypes.HWND),('hInstance',wintypes.HINSTANCE),
+            ('lpstrFilter',wintypes.LPCWSTR),('lpstrCustomFilter',wintypes.LPWSTR),('nMaxCustFilter',wintypes.DWORD),
+            ('nFilterIndex',wintypes.DWORD),('lpstrFile',wintypes.LPWSTR),('nMaxFile',wintypes.DWORD),
+            ('lpstrFileTitle',wintypes.LPWSTR),('nMaxFileTitle',wintypes.DWORD),('lpstrInitialDir',wintypes.LPCWSTR),
+            ('lpstrTitle',wintypes.LPCWSTR),('Flags',wintypes.DWORD),('nFileOffset',wintypes.WORD),
+            ('nFileExtension',wintypes.WORD),('lpstrDefExt',wintypes.LPCWSTR),('lCustData',wintypes.LPARAM),
+            ('lpfnHook',ctypes.c_void_p),('lpTemplateName',wintypes.LPCWSTR),('pvReserved',ctypes.c_void_p),
+            ('dwReserved',wintypes.DWORD),('FlagsEx',wintypes.DWORD)]
+    dialog=ctypes.WinDLL('comdlg32',use_last_error=True)
+    dialog.GetOpenFileNameW.argtypes=[ctypes.POINTER(OpenFileName)];dialog.GetOpenFileNameW.restype=wintypes.BOOL
+    dialog.CommDlgExtendedError.restype=wintypes.DWORD
+    buffer=ctypes.create_unicode_buffer(32768)
+    request=OpenFileName();request.lStructSize=ctypes.sizeof(request)
+    request.lpstrFilter='Windows apps (*.exe)\0*.exe\0\0';request.nFilterIndex=1
+    request.lpstrFile=ctypes.cast(buffer,wintypes.LPWSTR);request.nMaxFile=len(buffer)
+    request.lpstrInitialDir=os.environ.get('SystemDrive','C:')+'\\'
+    request.lpstrTitle='Choose app / 앱 선택';request.lpstrDefExt='exe'
+    # Explorer, file/path must exist, keep working directory, resizable, no Recent entry.
+    request.Flags=0x00080000|0x00001000|0x00000800|0x00000008|0x00800000|0x02000000
+    if dialog.GetOpenFileNameW(ctypes.byref(request)):return buffer.value
+    if dialog.CommDlgExtendedError():raise ValueError('Could not open the app picker. Paste the app file path instead.')
+    return ''
+
+def choose_app_file():
+    """Choose a file only; saved settings are changed after the user presses Save."""
+    if os.name!='nt':raise ValueError('App selection is available in the Windows app.')
+    path=app_path(pick_app_file())
+    if path and not Path(path).is_file():raise ValueError('The selected app file is unavailable.')
+    return {'path':path,'cancelled':not bool(path)}
 
 def open_desktop_app(executable,missing_message):
     executable=Path(executable)
@@ -149,7 +230,10 @@ def worker(payload):
         if limited:break
     return {'results':results,'warnings':warnings,'limited':limited,'scanned':count}
 
-def state(data):return {**read_config(data),'obsidianInstalled':obsidian_installed()}
+def state(data):
+    config=read_config(data)
+    status={kind:{'found':bool(resolve_app(kind,config))} for kind in config['apps']}
+    return {**config,'appStatus':status,'obsidianInstalled':status['obsidian']['found']}
 
 def handle_get(handler,path,data):
     if path=='/local-api/tools':handler.reply(state(data));return True
@@ -160,15 +244,17 @@ def handle_get(handler,path,data):
     return False
 
 def handle_post(path,payload,data):
-    if path=='/local-api/tools/config':return save_config(data,payload)
+    if path=='/local-api/tools/config':
+        save_config(data,payload);return state(data)
     if path=='/local-api/tools/search':return start_search(data,payload)
+    if path=='/local-api/tools/choose-app':return choose_app_file()
     if path=='/local-api/tools/open':
         kind=payload.get('kind')
-        if kind=='pos':open_desktop_app(r'C:\Order\sales(2024.04.24).exe','Sunny POS could not be found on this computer.');return {'opened':True}
-        if kind=='vpn':open_desktop_app(r'C:\Program Files\SoftEther VPN Client\vpncmgr_x64.exe','SoftEther VPN could not be found on this computer.');return {'opened':True}
-        if kind=='obsidian':
-            if not obsidian_installed():raise ValueError('Obsidian is not installed on this computer.')
-            launch('obsidian://open');return {'opened':True}
+        if kind in ('obsidian','pos','vpn'):
+            executable=resolve_app(kind,read_config(data))
+            if not executable:return {'opened':False,'needsSetup':kind}
+            open_desktop_app(executable,'The selected app file is unavailable.')
+            return {'opened':True}
         if kind=='network':explorer('shell:NetworkPlacesFolder');return {'opened':True}
         if kind=='network-address':
             address=payload.get('address','').strip()
@@ -184,6 +270,7 @@ def handle_post(path,payload,data):
             if not 0<=index<len(links) or not links[index]['target']:raise ValueError('Set up this shortcut first.')
             target=links[index]['target']
             if urlsplit(target).scheme in ('http','https'):launch(target)
+            elif ntpath.splitext(target)[1].casefold()=='.exe':open_desktop_app(app_path(target),'The selected app file is unavailable.')
             else:explorer(target)
             return {'opened':True}
         if kind=='result':

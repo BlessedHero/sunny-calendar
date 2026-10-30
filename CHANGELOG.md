@@ -1,5 +1,13 @@
 # Change history
 
+## 0.3.2 — 2026-10-30
+
+- Both top paper corners flip upward to the next month; bottom corners flip downward to the previous month. Added subtle English/Korean labels.
+- POS, VPN and Obsidian use per-computer app discovery and an optional native app picker. App paths and visibility stay local; missing apps open setup. Future shortcut slots can open an explicitly chosen app.
+- Added a clean public web build with a Windows installer link. Browser notes stay in that browser; desktop app and network actions require the installed Windows edition.
+- Includes the verified-download updater and older-helper migration fix from 0.3.1.
+
+
 ## 0.3.1 — 2026-10-29
 
 - Balanced each day header: ++ at the far left, the date centered, and + at the far right.

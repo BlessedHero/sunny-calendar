@@ -47,7 +47,7 @@ This edition uses loopback port 4176, its own Windows identity and its own local
 - Direct multiline task editing, four preview cards, full-day view for extra tasks, font sizes, completion checkboxes, confirmed deletion and Undo.
 - Editable sample monthly/permanent memos, screenshot paste/resizing, tables and note backup/restore.
 - English/Korean labels, help and hover tips.
-- Obsidian, Sunny POS and SoftEther VPN launch buttons where those apps are installed. Users handle POS sign-in and VPN connections. POS uses the Sunny office installation path and is optional on other PCs.
+- Obsidian, Sunny POS and SoftEther VPN launch buttons where those apps are installed. Users handle POS sign-in and VPN connections. Common install locations are detected on each computer. Use **··· > Apps on this computer > Choose app > Save** to choose a different POS, VPN or Obsidian executable. Obsidian is optional and hidden if absent. These paths are never shared or included in releases.
 - Three empty shortcut slots and filename search. Users choose their own local/shared folders. A network address such as \\COMPUTER opens through File Explorer using existing Windows access.
 
 ## 한국어 시작 안내
@@ -73,3 +73,7 @@ Each date has a raised green **++** beside the personal **+**. The first ++ asks
 Click the top magnifying glass to open and focus the left search. Ordinary words find calendar notes. Type two backslashes followed by a computer name and press Enter, or click Open network computer, to open that computer in Windows File Explorer. Windows uses the access you already have. This does not enable shared calendar syncing. To search filenames inside a network share, add the specific shared folder through Search files > Search folders.
 
 Setup programs are built with Inno Setup 7.1.1 by Jordan Russell and contributors. Its license is included in licenses/Inno-Setup.txt.
+
+## Public web version
+
+The public calendar runs in your browser and stores notes in that browser. Use the blue **Download the Windows app** link for POS/VPN launchers and Windows/network folders. Browser notes and installed-app notes are separate; Export backup and Restore backup can move a copy. The public site does not enable coworker sync.

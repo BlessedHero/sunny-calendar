@@ -88,32 +88,42 @@
 .confirm-delete-button:hover{background:#8f1d17}
 .cancel-delete-button:focus-visible,.confirm-delete-button:focus-visible{outline:2px solid #1a73e8;outline-offset:3px}
 
-/* A paper calendar: left corners turn forward, right corners turn backward. */
-.month-paper{position:relative;display:flex;flex:1;min-height:0;min-width:0;perspective:1500px;overflow:hidden;isolation:isolate}
-.page-corner{position:absolute;width:24px;height:24px;z-index:35;padding:0;color:#53657b;background:linear-gradient(135deg,#c5d0df,#eef2f8 58%,#fff 61%);filter:drop-shadow(1px 1px 1px #43536d45);transition:filter .2s,background .2s;opacity:.82}
-.page-corner:hover{opacity:1;filter:drop-shadow(2px 2px 2px #43536d70)}
-.page-corner:focus-visible{outline:3px solid #1a73e8;outline-offset:-3px}
+/* Fold upward for the next month; downward for the previous month. */
+.month-paper{position:relative;display:flex;flex:1;min-height:0;min-width:0;perspective:1500px;overflow:hidden;isolation:isolate;padding-block:20px}
+.page-corner{position:absolute;width:88px;height:20px;z-index:35;padding:0;color:#53657b;background:transparent;opacity:.85;transition:color .2s,opacity .2s}
+.page-corner::before{content:"";position:absolute;top:0;width:20px;height:20px;background:linear-gradient(135deg,#c5d0df,#eef2f8 58%,#fff 61%);filter:drop-shadow(1px 1px 1px #43536d45)}
+.page-corner:hover{opacity:1;color:#1a4d87}
+.page-corner:focus-visible{outline:2px solid #1a73e8;outline-offset:-2px;border-radius:3px}
 .page-corner:disabled{cursor:wait;opacity:.35}
-.page-corner span{position:absolute;font:16px/14px Arial}
-.page-corner.top-left{top:0;left:0;clip-path:polygon(0 0,100% 0,0 100%)}
-.page-corner.top-left span{top:1px;left:3px}
-.page-corner.bottom-left{bottom:0;left:0;clip-path:polygon(0 0,100% 100%,0 100%)}
-.page-corner.bottom-left span{bottom:1px;left:3px}
-.page-corner.top-right{top:0;right:0;clip-path:polygon(0 0,100% 0,100% 100%);background:linear-gradient(225deg,#c5d0df,#eef2f8 58%,#fff 61%)}
-.page-corner.top-right span{top:1px;right:3px}
-.page-corner.bottom-right{bottom:0;right:0;clip-path:polygon(100% 0,100% 100%,0 100%);background:linear-gradient(315deg,#c5d0df,#eef2f8 58%,#fff 61%)}
-.page-corner.bottom-right span{bottom:1px;right:3px}
-.month-turn{position:absolute;inset:0;z-index:30;pointer-events:none;transform-style:preserve-3d;animation-duration:1.6s;animation-timing-function:cubic-bezier(.3,.08,.23,1);animation-fill-mode:both;will-change:transform}
-.month-turn.forward{transform-origin:right center;animation-name:paper-forward}
-.month-turn.backward{transform-origin:left center;animation-name:paper-backward}
+.page-corner .corner-arrow{position:absolute;font:11px/14px Arial;z-index:1}
+.page-corner .corner-label{position:absolute;top:3px;font:600 8px/14px Arial,sans-serif;letter-spacing:.2px;white-space:nowrap;background:#f8fafcde;border-radius:3px;padding:0 3px}
+.page-corner.top-left{top:0;left:0}
+.page-corner.bottom-left{bottom:0;left:0}
+.page-corner.top-right{top:0;right:0}
+.page-corner.bottom-right{bottom:0;right:0}
+.page-corner:is(.top-left,.bottom-left)::before{left:0}
+.page-corner:is(.top-right,.bottom-right)::before{right:0}
+.page-corner.top-left::before{clip-path:polygon(0 0,100% 0,0 100%)}
+.page-corner.bottom-left::before{clip-path:polygon(0 0,100% 100%,0 100%)}
+.page-corner.top-right::before{clip-path:polygon(0 0,100% 0,100% 100%);background:linear-gradient(225deg,#c5d0df,#eef2f8 58%,#fff 61%)}
+.page-corner.bottom-right::before{clip-path:polygon(100% 0,100% 100%,0 100%);background:linear-gradient(315deg,#c5d0df,#eef2f8 58%,#fff 61%)}
+.page-corner:is(.top-left,.bottom-left) .corner-label{left:18px}
+.page-corner:is(.top-right,.bottom-right) .corner-label{right:18px}
+.page-corner:is(.top-left,.bottom-left) .corner-arrow{left:2px}
+.page-corner:is(.top-right,.bottom-right) .corner-arrow{right:2px}
+.page-corner:is(.top-left,.top-right) .corner-arrow{top:0}
+.page-corner:is(.bottom-left,.bottom-right) .corner-arrow{bottom:0}
+.month-turn{position:absolute;inset:20px 0;z-index:30;pointer-events:none;transform-style:preserve-3d;animation-duration:1.6s;animation-timing-function:cubic-bezier(.3,.08,.23,1);animation-fill-mode:both;will-change:transform}
+.month-turn.forward{transform-origin:center top;animation-name:paper-forward}
+.month-turn.backward{transform-origin:center bottom;animation-name:paper-backward}
 .month-turn-front,.month-turn-back{position:absolute;inset:0;backface-visibility:hidden;overflow:hidden;background:#fff;box-shadow:0 0 20px #23384d35}
 .month-turn-front>.month-grid{height:100%}
-.month-turn-back{transform:rotateY(180deg);background:repeating-linear-gradient(0deg,#f9fafb 0,#fff 3px);display:flex;align-items:center;justify-content:center;border:1px solid #e3e8f0}
+.month-turn-back{transform:rotateX(180deg);background:repeating-linear-gradient(0deg,#f9fafb 0,#fff 3px);display:flex;align-items:center;justify-content:center;border:1px solid #e3e8f0}
 .month-turn-back span{font:20px Georgia,serif;color:#c4cdd8;letter-spacing:2px;transform:rotate(-8deg)}
 .page-sound-toggle{display:flex;align-items:center;justify-content:center;width:23px;height:20px;flex:none;border-radius:4px}
 .page-sound-toggle .icon{width:15px;height:15px;opacity:.7}
-@keyframes paper-forward{0%{transform:rotateY(0deg)}45%{transform:rotateY(70deg)}100%{transform:rotateY(180deg)}}
-@keyframes paper-backward{0%{transform:rotateY(0deg)}45%{transform:rotateY(-70deg)}100%{transform:rotateY(-180deg)}}
+@keyframes paper-forward{0%{transform:rotateX(0deg)}45%{transform:rotateX(70deg)}100%{transform:rotateX(180deg)}}
+@keyframes paper-backward{0%{transform:rotateX(0deg)}45%{transform:rotateX(-70deg)}100%{transform:rotateX(-180deg)}}
 .month-turn.reduce-turn{animation:none;opacity:0}
 @media(prefers-reduced-motion:reduce){.month-turn{animation:none;opacity:0}.page-corner{transition:none}}
 .brand-icon{background:transparent!important;padding:0!important}

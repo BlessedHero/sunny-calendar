@@ -3,6 +3,7 @@ import {createPortal} from 'react-dom';
 import {useI18n} from './i18n';
 import release from '../app-release.json';
 import './updates.css';
+const webOnly=!['127.0.0.1','localhost'].includes(window.location.hostname);
 
 async function api(action,body){
   const response=await fetch('/local-api/updates/'+action,body===undefined?{cache:'no-store'}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
@@ -17,7 +18,7 @@ export function UpdateControl({ready,beforeDownload}){
   const [state,setState]=useState({phase:'checking',currentVersion:release.version});
   const [busy,setBusy]=useState(false),[message,setMessage]=useState(''),[details,setDetails]=useState(false),[prepared,setPrepared]=useState(false);
   useEffect(()=>{const native=window.chrome?.webview;if(!native)return;const receive=e=>{if(e.data==='sunny-update-failed'){setBusy(false);setMessage('Could not start the installer. Your calendar stays open. Try again after saving.');}};native.addEventListener('message',receive);return()=>native.removeEventListener('message',receive);},[]);
-  useEffect(()=>{let alive=true;checkOnOpen().then(value=>{if(alive)setState(value);}).catch(()=>{if(alive)setState({phase:'unavailable',currentVersion:release.version});});return()=>{alive=false;};},[]);
+  useEffect(()=>{if(webOnly)return;let alive=true;checkOnOpen().then(value=>{if(alive)setState(value);}).catch(()=>{if(alive)setState({phase:'unavailable',currentVersion:release.version});});return()=>{alive=false;};},[]);
   // A second window may have started the same check. Poll only that local result.
   useEffect(()=>{if(state.phase!=='checking')return;let alive=true;const timer=setTimeout(()=>api('status').then(value=>{if(alive)setState(value);}).catch(()=>{if(alive)setState(s=>({...s,phase:'unavailable'}));}),1500);return()=>{alive=false;clearTimeout(timer);};},[state]);
   const available=state.phase==='available';
@@ -47,6 +48,7 @@ export function UpdateControl({ready,beforeDownload}){
   }
   const title=state.phase==='unavailable'?t('Could not check online. Your calendar still works. Try again later.'):
     t('Checks for a new version when this app opens. Your notes and pictures are not uploaded.');
+  if(webOnly)return <a className="app-update-button" href="https://github.com/BlessedHero/sunny-calendar/releases/latest/download/Sunny-Calendar-Setup.exe" title={t('Download the Windows app')}><img src="/icons/download.svg" alt=""/><span>{t('Download the Windows app')} · v{release.version}</span></a>;
   return <div className="app-update-control"><button type="button" className={`app-update-button ${available?'update-available':''}`} title={title} aria-label={label} disabled={!ready||busy||state.phase==='checking'} onClick={click}>
     <img src={available?'/icons/download.svg':'/icons/check_circle.svg'} alt=""/><span>{label}</span></button>
     {details&&createPortal(<div className="modal-backdrop update-backdrop"><section className="update-info" role="dialog" aria-modal="true" aria-label={t(prepared?'Sunny Calendar — Update now':'Sunny Calendar updates')}><h2>{t(prepared?'Sunny Calendar — Update now':'Sunny Calendar updates')}</h2><p>{t(message)}</p>{prepared?<div className="update-dialog-actions"><button disabled={busy} onClick={()=>setDetails(false)}>{t('Cancel')}</button><button className="primary-button" disabled={busy} onClick={updateNow}>{t(busy?'Opening installer…':'Update')}</button></div>:<button className="primary-button" onClick={()=>setDetails(false)}>{t('Got it')}</button>}</section></div>,document.body)}

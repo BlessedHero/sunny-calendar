@@ -24,7 +24,7 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Frontend build failed.' }
     npm.cmd run test:sites
     if ($LASTEXITCODE -ne 0) { throw 'Existing worker tests failed.' }
-    & (Join-Path $taskBuildRoot 'runtime/python.exe') -m unittest discover -s tests -p 'test_calendar_updates.py'
+    & (Join-Path $taskBuildRoot 'runtime/python.exe') -m unittest discover -s tests -p 'test_*.py'
     if ($LASTEXITCODE -ne 0) { throw 'Update checker and backup tests failed.' }
     node --test tests/task-colors.test.mjs
     if ($LASTEXITCODE -ne 0) { throw 'Task color tests failed.' }

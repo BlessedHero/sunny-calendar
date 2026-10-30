@@ -29,3 +29,11 @@
 - Small-window search/settings icons remain visible. Korean labels verified in the working browser.
 - Working calendar comparison: 21 document bodies exactly match the earlier snapshot. One day has one newly added empty personal card; its original three task layers and completion flags are unchanged. The blank card was preserved. No real records were tagged as team tasks.
 - Coworker sync is NOT implemented. The app clearly labels team entries as local drafts and connection status as Not connected.
+
+## 0.3.2 release checks — 2026-10-30
+
+- Vite build, four Sites worker checks, three task color checks and nineteen Python update/app-link checks pass.
+- Real Windows app-picker selection and per-computer POS path persistence verified; optional button hiding and missing-app setup verified.
+- Native 0.3.1 to 0.3.2 update: verified installer, backup, saved-window closure, interactive Install/Finish and automatic reopen passed. Seven fictional database records, including a pasted image, retained the same bodies and revisions.
+- Public source uses empty imported seeds and project-only Git author identity. User data and per-computer settings are excluded.
+- Cancelling the normal installer reopened the original version; all seven test records and revisions remained unchanged.

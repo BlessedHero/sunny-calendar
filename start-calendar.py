@@ -54,7 +54,7 @@ class Handler(SimpleHTTPRequestHandler):
         super().do_GET()
     def do_POST(self):
         if not self.valid_host():return
-        if self.path!='/local-api/documents' and self.path not in {'/local-api/tools/config','/local-api/tools/search','/local-api/tools/open','/local-api/updates/check','/local-api/updates/open','/local-api/updates/prepare','/local-api/updates/launch','/local-api/updates/shutdown'}:self.send_error(404);return
+        if self.path!='/local-api/documents' and self.path not in {'/local-api/tools/config','/local-api/tools/choose-app','/local-api/tools/search','/local-api/tools/open','/local-api/updates/check','/local-api/updates/open','/local-api/updates/prepare','/local-api/updates/launch','/local-api/updates/shutdown'}:self.send_error(404);return
         origin=self.headers.get('Origin','')
         if origin not in {f'http://{h}' for h in ALLOWED} or not self.headers.get('Content-Type','').startswith('application/json'):
             self.send_error(403);return
